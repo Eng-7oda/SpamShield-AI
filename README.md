@@ -1,57 +1,191 @@
-# SpamShield AI — SMS Spam Detection
+# 🛡️ SpamShield AI — SMS Spam Detection
 
-A Streamlit dashboard for an SMS classifier using TF-IDF + Support Vector Classifier (SVC). It includes a dashboard, live message analyzer, hold-out model metrics, confusion matrix, and session prediction history with CSV export.
+An interactive Machine Learning application that classifies SMS messages as **Spam** or **Ham (Legitimate)** using TF-IDF feature extraction and a Support Vector Classifier (SVC).
 
-## Project files
+SpamShield AI provides an intuitive Streamlit dashboard for analyzing messages, exploring model evaluation metrics, and reviewing prediction history.
 
-- `app.py` — Streamlit UI.
-- `train_model.py` — loads `spam.csv`, trains the model, evaluates it, and saves reusable artifacts.
-- `model_utils.py` — shared preprocessing used by training and inference.
-- `requirements.txt` — Python dependencies.
-- `spam.csv` — **you provide this file** (the SMS Spam Collection dataset).
+## ✨ Features
 
-## 1. Set up the environment (Windows / Anaconda Prompt)
+- **📊 Interactive Dashboard** — Explore project information and model evaluation results.
+- **🔍 Message Analyzer** — Enter an SMS message and classify it as Spam or Ham.
+- **🤖 Machine Learning Pipeline** — Transform text into numerical features using TF-IDF and classify messages using SVC.
+- **📈 Model Evaluation** — View evaluation metrics and a confusion matrix based on held-out test data.
+- **📝 Prediction History** — Review predictions made during the current session.
+- **📥 CSV Export** — Export prediction history for further analysis.
+- **♻️ Reusable Model Artifacts** — Save and reuse the trained model and TF-IDF vectorizer.
+- **🧹 Text Preprocessing** — Apply shared text-cleaning logic during training and inference.
 
-```bash
-cd path\to\SpamShield_AI
-conda activate ml
-python -m pip install -r requirements.txt
+## 🧰 Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Pandas | Dataset loading and manipulation |
+| Scikit-learn | TF-IDF, SVC, data splitting, and evaluation |
+| NLTK | Text preprocessing resources |
+| Streamlit | Interactive web application |
+| Matplotlib / Seaborn | Evaluation visualizations, where used |
+
+## 🏗️ Project Structure
+
+```text
+SpamShield-AI/
+├── app.py                  # Streamlit application
+├── train_model.py          # Model training and evaluation
+├── model_utils.py          # Shared text preprocessing utilities
+├── spam.csv                # SMS spam dataset
+├── model_metrics.json      # Saved evaluation metrics
+├── requirements.txt        # Python dependencies
+├── .gitignore              # Ignored files and artifacts
+└── README.md               # Project documentation
 ```
 
-If you do not have the `ml` conda environment, create one first:
+The trained model bundle (`spam_model_bundle.joblib`) is generated locally during training and is not required to be committed to the repository.
+
+## 📂 Dataset
+
+The project uses the **SMS Spam Collection Dataset**, which contains SMS messages labeled as spam or legitimate (ham).
+
+The training script supports datasets with the following column formats:
+
+- `v1` and `v2`
+- `Target` and `Text`
+
+If you are using a different version of the dataset, make sure its file format and column names are compatible with the training script.
+
+## ⚙️ Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Eng-7oda/SpamShield-AI.git
+cd SpamShield-AI
+```
+
+### 2. Create and activate a Python environment
+
+Using Anaconda:
 
 ```bash
 conda create -n ml python=3.12 -y
 conda activate ml
+```
+
+Alternatively, use an existing Python environment compatible with the project dependencies.
+
+### 3. Install dependencies
+
+```bash
 python -m pip install -r requirements.txt
 ```
 
-## 2. Add the dataset
+### 4. Verify the dataset
 
-Copy your existing `spam.csv` into this folder, next to `train_model.py`. The code supports the original dataset columns `v1` and `v2` and the renamed columns `Target` and `Text`.
+Make sure `spam.csv` is located in the project root directory, alongside `train_model.py`.
 
-## 3. Train and save the model
+If the dataset is not included in your downloaded copy, obtain the SMS Spam Collection Dataset from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/228/sms+spam+collection) and prepare it in the format expected by the training script.
+
+## 🧠 Train the Model
+
+Run the training script:
 
 ```bash
 python train_model.py
 ```
 
-The script creates `spam_model_bundle.joblib` and `model_metrics.json`. It uses a stratified 70/30 train/test split, fits TF-IDF **only on the training data**, and evaluates the SVM on the held-out test data. The first run may download NLTK stopwords and WordNet data.
+The script loads and preprocesses the dataset, splits it into training and testing sets using a stratified 70/30 split, trains the TF-IDF and SVC pipeline, and evaluates its performance on the held-out test set.
 
-## 4. Launch the UI
+The generated artifacts include:
+
+- `spam_model_bundle.joblib` — The trained model and associated vectorizer.
+- `model_metrics.json` — Saved evaluation metrics.
+
+**Note:** The first run may download the NLTK resources required by the preprocessing pipeline.
+
+## 🚀 Run the Application
+
+After training completes successfully, launch the Streamlit application:
 
 ```bash
 streamlit run app.py
 ```
 
-Streamlit will print a local URL, usually `http://localhost:8501`. Open it in your browser.
+Open the local URL printed in your terminal, usually:
 
-## Important implementation notes
+```text
+http://localhost:8501
+```
 
-- Train the model before opening the app. The UI does not silently invent model metrics or predictions.
-- The same text preprocessing function is called during training and inference.
-- The fitted TF-IDF vectorizer is saved and reused with `.transform()` for incoming messages; it is **not refitted** on individual messages.
-- The SVC is not configured for probability estimates, so the app displays the predicted class rather than an unsupported confidence percentage.
-- History is session-only and is not a persistent database. Use the CSV export if needed, but handle message content carefully.
-- The preprocessing intentionally follows the notebook's English-only cleaning, so digits, punctuation, URLs, and non-English characters are removed. This can remove useful spam signals and is worth testing as a future improvement.
-- Only load `spam_model_bundle.joblib` if you trust its source; joblib/pickle files can execute code when loaded.
+You can then analyze SMS messages, explore evaluation metrics, and review prediction history through the dashboard.
+
+## 📏 Model Evaluation
+
+The application provides model evaluation information, including:
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
+
+The reported metrics are based on the held-out test set. Refer to `model_metrics.json` for the actual results produced by your training run.
+
+For spam detection, precision and recall are particularly important: false positives may incorrectly flag legitimate messages, while false negatives may allow spam messages to pass undetected.
+
+## 🔄 Machine Learning Workflow
+
+```text
+SMS Dataset
+    ↓
+Data Loading and Validation
+    ↓
+Text Preprocessing
+    ↓
+Stratified Train/Test Split
+    ↓
+TF-IDF Feature Extraction
+    ↓
+Support Vector Classifier (SVC)
+    ↓
+Model Evaluation
+    ↓
+Save Model and Metrics
+    ↓
+Streamlit Application
+    ↓
+SMS Prediction and History
+```
+
+The TF-IDF vectorizer is fitted on the training data and reused during inference, helping maintain consistency between training and prediction.
+
+## ⚠️ Limitations
+
+- The current preprocessing pipeline is primarily designed for English-language SMS messages.
+- Cleaning removes digits, punctuation, URLs, and non-English characters, which may remove useful information for spam detection.
+- Prediction history is stored only for the current application session; it is not a persistent database.
+- The application displays predicted classes rather than unsupported probability-based confidence scores.
+- Model performance depends on the dataset, preprocessing choices, and training configuration.
+
+## 🔮 Future Improvements
+
+- Add support for multilingual SMS messages.
+- Experiment with alternative text representations and classification algorithms.
+- Improve preprocessing to preserve useful spam indicators, such as URLs and suspicious numbers.
+- Add persistent prediction history and analytics.
+- Deploy the application to a public hosting platform.
+- Evaluate robustness on unseen and more recent spam messages.
+
+## 🔐 Security Note
+
+Only load serialized model files from trusted sources. Files created with `joblib` or Python pickle may execute malicious code when loaded.
+
+## 👨‍💻 Author
+
+**Mahmoud Mosad (Eng-7oda)**
+
+- GitHub: [@Eng-7oda](https://github.com/Eng-7oda)
+- Project Repository: [SpamShield-AI](https://github.com/Eng-7oda/SpamShield-AI)
+
+---
+
+*SpamShield AI — Machine Learning for SMS Spam Detection.*

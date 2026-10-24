@@ -1,0 +1,52 @@
+{
+  "accuracy": 0.9820574162679426,
+  "spam_precision": 1.0,
+  "spam_recall": 0.8660714285714286,
+  "spam_f1": 0.9282296650717703,
+  "confusion_matrix": [
+    [
+      1448,
+      0
+    ],
+    [
+      30,
+      194
+    ]
+  ],
+  "classification_report": {
+    "Ham": {
+      "precision": 0.979702300405954,
+      "recall": 1.0,
+      "f1-score": 0.9897470950102529,
+      "support": 1448.0
+    },
+    "Spam": {
+      "precision": 1.0,
+      "recall": 0.8660714285714286,
+      "f1-score": 0.9282296650717703,
+      "support": 224.0
+    },
+    "accuracy": 0.9820574162679426,
+    "macro avg": {
+      "precision": 0.989851150202977,
+      "recall": 0.9330357142857143,
+      "f1-score": 0.9589883800410116,
+      "support": 1672.0
+    },
+    "weighted avg": {
+      "precision": 0.9824216094424769,
+      "recall": 0.9820574162679426,
+      "f1-score": 0.9815055254491165,
+      "support": 1672.0
+    }
+  },
+  "dataset_rows": 5572,
+  "train_rows": 3900,
+  "test_rows": 1672,
+  "label_mapping": {
+    "ham": 0,
+    "spam": 1
+  },
+  "model_name": "Support Vector Classifier (SVC)",
+  "vectorizer_name": "TF-IDF"
+}

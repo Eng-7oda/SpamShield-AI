@@ -1,6 +1,4 @@
 
-# Dataset
-spam.csv
 
 # Trained model files
 *.joblib
